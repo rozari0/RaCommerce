@@ -47,9 +47,13 @@ EXTERNAL_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "dj_rest_auth",
+    "drf_spectacular",
 ]
 
-LOCAL_APPS = ["apps.users"]
+LOCAL_APPS = [
+    "apps.users",
+    "apps.products",
+]
 
 INSTALLED_APPS += LOCAL_APPS
 INSTALLED_APPS += EXTERNAL_APPS
@@ -133,3 +137,10 @@ STATIC_URL = "static/"
 
 # Custom User Model
 AUTH_USER_MODEL = "users.User"
+
+# Rest Framework Configuration
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "PAGE_SIZE": 10,
+}
