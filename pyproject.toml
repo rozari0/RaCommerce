@@ -3,8 +3,17 @@ name = "racommerce"
 version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
+    "dj-rest-auth>=7.2.0",
     "django>=6.0.7",
+    "django-environ>=0.14.0",
     "django-filter>=25.2",
     "djangorestframework>=3.17.1",
+    "djangorestframework-stubs>=3.17.0",
     "markdown>=3.10.2",
+    "ruff>=0.15.21",
+]
+
+[tool.ruff]
+exclude = [
+    "*/migrations/*.py",
 ]
