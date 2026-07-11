@@ -1,7 +1,8 @@
 from rest_framework.generics import ListAPIView
+from rest_framework.pagination import LimitOffsetPagination
+
 from .models import Product
 from .serializers import ProductSerializer
-from rest_framework.pagination import LimitOffsetPagination
 
 
 class ProductListView(ListAPIView):

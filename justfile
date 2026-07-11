@@ -6,3 +6,8 @@ makemigrations:
 
 migrate:
     uv run manage.py migrate
+
+# Format python files.
+format:
+    uv run ruff check --select I --fix
+    uv run ruff format .

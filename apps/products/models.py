@@ -1,13 +1,16 @@
 from django.db import models
+from django.utils.text import slugify
+from django_lifecycle import BEFORE_CREATE, LifecycleModelMixin, hook
 
 
-class Category(models.Model):
+class Category(LifecycleModelMixin, models.Model):
     class Meta:
         verbose_name_plural = "Categories"
         ordering = ["name"]
         db_table = "categories"
 
     name = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     description = models.TextField(blank=True, null=True)
     parent = models.ForeignKey(
         "self",
@@ -18,6 +21,11 @@ class Category(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @hook(BEFORE_CREATE)
+    def update_slug(self):
+        if self.name:
+            self.slug = slugify(self.name)
 
     def __str__(self):
         if self.parent:
