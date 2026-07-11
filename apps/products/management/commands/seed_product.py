@@ -1,8 +1,10 @@
-from django.core.management.base import BaseCommand
-import requests
-from apps.products.models import Product, Category
-from uuid import uuid8
 from random import randint
+from uuid import uuid8
+
+import requests
+from django.core.management.base import BaseCommand
+
+from apps.products.models import Category, Product
 
 
 class Command(BaseCommand):

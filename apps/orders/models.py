@@ -2,9 +2,9 @@ from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django_lifecycle import AFTER_SAVE, BEFORE_SAVE, LifecycleModelMixin, hook
 
 from apps.products.models import Product
-from django_lifecycle import LifecycleModelMixin, hook, BEFORE_SAVE, AFTER_SAVE
 
 User = get_user_model()
 
