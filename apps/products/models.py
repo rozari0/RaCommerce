@@ -9,10 +9,19 @@ class Category(models.Model):
 
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True, null=True)
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        related_name="children",
+        null=True,
+        blank=True,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        if self.parent:
+            return f"{self.parent.name} > {self.name}"
         return self.name
 
 
