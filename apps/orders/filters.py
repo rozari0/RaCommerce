@@ -14,5 +14,4 @@ class OrderFilter(filters.FilterSet):
         model = Order
         fields = [
             "status",
-            "user",
         ]
