@@ -1,15 +1,16 @@
-from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
 
 from apps.common.permissions import ReadOnlyOrStaff
 
-from .models import Product
-from .serializers import ProductSerializer
+from .models import Category, Product
+from .serializers import CategorySerializer, ProductSerializer
 
 
-class ProductListView(ListAPIView):
+class ProductListView(ListCreateAPIView):
     pagination_class = LimitOffsetPagination
     serializer_class = ProductSerializer
+    permission_classes = [ReadOnlyOrStaff]
 
     def get_queryset(self):
         return Product.objects.filter(
@@ -23,3 +24,19 @@ class ProductDetailView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Product.objects.all()
+
+
+class CategoryListView(ListCreateAPIView):
+    pagination_class = LimitOffsetPagination
+    serializer_class = CategorySerializer
+    permission_classes = [ReadOnlyOrStaff]
+
+    def get_queryset(self):
+        return Category.objects.all()
+
+
+class CategoryRUDView(RetrieveUpdateDestroyAPIView):
+    serializer_class = CategorySerializer
+    permission_classes = [ReadOnlyOrStaff]
+
+    queryset = Category.objects.all()
