@@ -11,3 +11,6 @@ migrate:
 format:
     uv run ruff check --select I --fix
     uv run ruff format .
+
+redis:
+    docker run --name djredis -d -p 6379:6379 --rm redis

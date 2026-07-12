@@ -1,11 +1,20 @@
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    ListAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import ValidationError
 
 from apps.orders.filters import OrderFilter
 from apps.orders.models import Order, OrderItem
-from apps.orders.serializers import CartItemUpdateSerializer, OrderItemInputSerializer, OrderItemSerializer, OrderSerializer
+from apps.orders.serializers import (
+    CartItemUpdateSerializer,
+    OrderItemInputSerializer,
+    OrderItemSerializer,
+    OrderSerializer,
+)
 
 
 class UsersOrdersView(ListAPIView):
@@ -23,8 +32,10 @@ class UsersOrdersView(ListAPIView):
         request=OrderItemInputSerializer,
         responses={
             201: OrderItemSerializer,
-            400: OpenApiResponse(description="Insufficient stock or invalid product/quantity"),
-        }
+            400: OpenApiResponse(
+                description="Insufficient stock or invalid product/quantity"
+            ),
+        },
     )
 )
 class OrderItemView(CreateAPIView):
@@ -66,12 +77,12 @@ class OrderItemView(CreateAPIView):
         request=CartItemUpdateSerializer,
         responses={
             200: OrderItemSerializer,
-            400: OpenApiResponse(description="Insufficient stock or quantity=0 deletes item"),
-        }
+            400: OpenApiResponse(
+                description="Insufficient stock or quantity=0 deletes item"
+            ),
+        },
     ),
-    delete=extend_schema(
-        responses={204: None}
-    )
+    delete=extend_schema(responses={204: None}),
 )
 class CartItemDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
