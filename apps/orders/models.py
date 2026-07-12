@@ -48,11 +48,12 @@ class OrderItem(LifecycleModelMixin, models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
 
     @hook(BEFORE_SAVE)
     def update_subtotal(self):
+        self.price = self.product.price
         self.subtotal = self.price * self.quantity
 
     @hook(AFTER_SAVE)

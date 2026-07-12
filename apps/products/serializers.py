@@ -8,6 +8,7 @@ class CategoryParentSerializer(serializers.ModelSerializer):
         model = Category
         fields = ("id", "name", "slug")
 
+
 class CategorySerializer(serializers.ModelSerializer):
     parent = CategoryParentSerializer(read_only=True)
     parent_id = serializers.PrimaryKeyRelatedField(
