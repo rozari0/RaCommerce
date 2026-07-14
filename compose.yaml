@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    env_file:
+      - .env
+    command: gunicorn --workers=2 -b 0.0.0.0:8000 config.wsgi
+    ports:
+      - "8000:8000"
+  redis:
+    image: redis:alpine
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    command: [ "redis-server" ]
