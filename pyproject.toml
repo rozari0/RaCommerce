@@ -11,6 +11,7 @@ dependencies = [
     "djangorestframework>=3.17.1",
     "djangorestframework-simplejwt>=5.5.1",
     "drf-spectacular>=0.30.0",
+    "gunicorn>=26.0.0",
     "markdown>=3.10.2",
     "pybkash>=0.3.0",
     "redis[hiredis]>=8.0.1",

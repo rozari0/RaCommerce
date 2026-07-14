@@ -2,12 +2,23 @@ from django.db import models
 from django.utils.text import slugify
 from django_lifecycle import BEFORE_CREATE, LifecycleModelMixin, hook
 
+from .services import get_all_descendants
+
 
 class Category(LifecycleModelMixin, models.Model):
     class Meta:
         verbose_name_plural = "Categories"
         ordering = ["name"]
         db_table = "categories"
+
+    def related_products(self):
+        category_ids = [self.id] + get_all_descendants(self.id)
+
+        return Product.objects.filter(
+            category_id__in=category_ids,
+            status=Product.STATUS_CHOICES.ACTIVE,
+            stock__gt=0,
+        )
 
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
@@ -39,6 +50,11 @@ class Product(models.Model):
         verbose_name_plural = "Products"
         ordering = ["-created_at"]
         db_table = "products"
+
+    def related_products(self):
+        if self.category:
+            return self.category.related_products().exclude(id=self.id)
+        return Product.objects.none()
 
     class STATUS_CHOICES(models.TextChoices):
         ACTIVE = "active", "Active"

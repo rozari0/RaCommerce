@@ -1,3 +1,4 @@
+from django.db.models.fields import related
 from rest_framework import serializers
 
 from .models import Category, Product
@@ -35,3 +36,15 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
+
+
+class ProductSerializerSingle(ProductSerializer):
+    related_products = serializers.SerializerMethodField()
+
+    def get_related_products(self, obj):
+        related_products = obj.related_products()
+        return ProductSerializer(related_products, many=True).data
+
+    class Meta:
+        model = Product
+        fields = ("id", "name", "sku", "description", "price", "stock", "status", "category", "related_products")
