@@ -1,5 +1,7 @@
 from django.core.cache import cache
+
 from .models import Category, Product
+
 
 def get_all_descendants(start_id):
     """DFS implementation"""
@@ -10,7 +12,7 @@ def get_all_descendants(start_id):
     if cached_result:
         return cached_result
 
-    all_categories = Category.objects.all().values('id','parent_id')
+    all_categories = Category.objects.all().values("id", "parent_id")
 
     tree = {}
 
@@ -18,7 +20,7 @@ def get_all_descendants(start_id):
         parent_id = category["parent_id"]
         if parent_id not in tree:
             tree[parent_id] = []
-        tree[parent_id].append(category['id'])
+        tree[parent_id].append(category["id"])
 
     stack = tree.get(start_id, []).copy()
 
@@ -31,7 +33,7 @@ def get_all_descendants(start_id):
         if current_id in tree:
             stack.extend(tree.get(current_id))
 
-    cache.set(cache_key, desc_ids, timeout=60*5)
+    cache.set(cache_key, desc_ids, timeout=60 * 5)
 
     return desc_ids
 
@@ -40,9 +42,7 @@ def get_related_products(category_id, limit=50):
     category_ids = category_id + get_all_descendants(category_id)
 
     products = Product.objects.filter(
-        category_id__in = category_ids,
-        status=Product.STATUS_CHOICES.ACTIVE,
-        stock__gt=0
-    ).order_by('created_at')[:limit]
+        category_id__in=category_ids, status=Product.STATUS_CHOICES.ACTIVE, stock__gt=0
+    ).order_by("created_at")[:limit]
 
     return products

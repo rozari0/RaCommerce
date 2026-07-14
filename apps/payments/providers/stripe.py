@@ -23,21 +23,22 @@ class StripeProvider(PaymentProvider):
     def create_checkout(self, order: Order, request: HttpRequest) -> CheckoutData:
         line_items = []
         for item in order.items.all():
-            line_items.append({
-                "price_data": {
-                    "currency": "bdt",
-                    "product_data": {"name": item.product.name},
-                    "unit_amount": int(item.price * Decimal("100")),
-                },
-                "quantity": item.quantity,
-            })
+            line_items.append(
+                {
+                    "price_data": {
+                        "currency": "bdt",
+                        "product_data": {"name": item.product.name},
+                        "unit_amount": int(item.price * Decimal("100")),
+                    },
+                    "quantity": item.quantity,
+                }
+            )
 
         session = stripe.checkout.Session.create(
             line_items=line_items,
             mode="payment",
-            success_url=request.build_absolute_uri(
-                "/api/payments/stripe/success/"
-            ) + "?session_id={CHECKOUT_SESSION_ID}",
+            success_url=request.build_absolute_uri("/api/payments/stripe/success/")
+            + "?session_id={CHECKOUT_SESSION_ID}",
             cancel_url=request.build_absolute_uri("/api/payments/stripe/cancel/"),
             metadata={"order_id": str(order.id)},
         )
@@ -62,7 +63,9 @@ class StripeProvider(PaymentProvider):
         success = session.payment_status == "paid"
         return PaymentResult(
             success=success,
-            transaction_id=getattr(session, "payment_intent", None) if success else None,
+            transaction_id=getattr(session, "payment_intent", None)
+            if success
+            else None,
             raw_response={"payment_status": session.payment_status},
         )
 

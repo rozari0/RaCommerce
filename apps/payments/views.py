@@ -3,9 +3,9 @@ from urllib.parse import urlencode
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.views.decorators.http import require_GET
-from rest_framework.decorators import api_view
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -73,9 +73,7 @@ class PaymentStatusView(RetrieveAPIView):
 def stripe_success_view(request):
     session_id = request.GET.get("session_id")
     if not session_id:
-        return HttpResponseRedirect(
-            settings.FRONTEND_URL or "/"
-        )
+        return HttpResponseRedirect(settings.FRONTEND_URL or "/")
 
     try:
         payment = Payment.objects.get(
@@ -83,9 +81,7 @@ def stripe_success_view(request):
             provider=Payment.Provider.STRIPE,
         )
     except Payment.DoesNotExist:
-        return HttpResponseRedirect(
-            settings.FRONTEND_URL or "/"
-        )
+        return HttpResponseRedirect(settings.FRONTEND_URL or "/")
 
     processor = PaymentProcessor("stripe")
     result = processor.verify_payment(payment)
@@ -122,13 +118,9 @@ def bkash_callback_view(request):
 
     if not payment_id or bkash_status != "success":
         redirect_url = (
-            f"{settings.FRONTEND_URL}/orders"
-            if settings.FRONTEND_URL
-            else "/"
+            f"{settings.FRONTEND_URL}/orders" if settings.FRONTEND_URL else "/"
         )
-        return HttpResponseRedirect(
-            f"{redirect_url}?payment_error=cancelled"
-        )
+        return HttpResponseRedirect(f"{redirect_url}?payment_error=cancelled")
 
     try:
         payment = Payment.objects.get(
@@ -186,9 +178,7 @@ def stripe_webhook_view(request):
         result = processor.verify_payment(payment)
         if result.success:
             payment.status = Payment.Status.COMPLETED
-            payment.transaction_id = (
-                result.transaction_id or payment.transaction_id
-            )
+            payment.transaction_id = result.transaction_id or payment.transaction_id
             payment.raw_response = result.raw_response
             payment.save()
 
