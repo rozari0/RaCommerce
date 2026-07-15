@@ -47,4 +47,14 @@ class ProductSerializerSingle(ProductSerializer):
 
     class Meta:
         model = Product
-        fields = ("id", "name", "sku", "description", "price", "stock", "status", "category", "related_products")
+        fields = (
+            "id",
+            "name",
+            "sku",
+            "description",
+            "price",
+            "stock",
+            "status",
+            "category",
+            "related_products",
+        )

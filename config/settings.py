@@ -16,7 +16,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 DEBUG = env.bool("DEBUG", False)
 
 ALLOWED_HOSTS = env.list(
-    "ALLOWED_HOSTS", default=["flink.serveousercontent.com", "localhost", "127.0.0.1"]
+    "ALLOWED_HOSTS", default=["localhost", "127.0.0.1", ".rozario.xyz"]
 )
 
 
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
 ]
 
 EXTERNAL_APPS = [
+    "corsheaders",
     "rest_framework",
     "rest_framework.authtoken",
     "dj_rest_auth",
@@ -50,6 +51,7 @@ INSTALLED_APPS += LOCAL_APPS
 INSTALLED_APPS += EXTERNAL_APPS
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -82,21 +84,21 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": env.db(),
 }
 
 # Caches
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": env.str("REDIS_URL", default="redis://127.0.0.1:6379/1"),
     }
 }
 
+# CORS Configuration
+CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", default=True)
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
