@@ -9,6 +9,10 @@ class Command(BaseCommand):
     help = "Seeds Dummy User in Database"
 
     def handle(self, *args, **options):
+        if User.objects.exists():
+            print("Users already seeded!")
+            return
+
         admin = User.objects.create_superuser(
             username="admin",
             email="admin@example.com",

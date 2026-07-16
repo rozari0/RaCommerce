@@ -13,6 +13,9 @@ class Command(BaseCommand):
     help = "Seeds Dummy Products in Database"
 
     def handle(self, *args, **options):
+        if Product.objects.exists():
+            print("Products already seeded!")
+            return
         products = requests.get("https://fakestoreapi.com/products").json()
 
         for product in products:
