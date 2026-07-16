@@ -32,4 +32,21 @@ class Command(BaseCommand):
                     "sku": str(uuid8()).split("-")[0],
                 },
             )
+
+        # Custom Product to show DFS
+        category, _ = Category.objects.get_or_create(name="Custom")
+        Product.objects.get_or_create(
+            name="Custom Product",
+            category=category,
+            description="This is a custom product for testing purposes.",
+            defaults={
+                "stock": 50,
+                "price": 99.99,
+                "sku": str(uuid8()).split("-")[0],
+            },
+        )
+        electronics_category, _ = Category.objects.get_or_create(name="Electronics")
+        electronics_category.parent = category
+        electronics_category.save()
+
         print("Done Seeding Products!")

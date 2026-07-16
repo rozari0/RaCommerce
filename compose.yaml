@@ -1,5 +1,5 @@
 services:
-  web:
+  raco_backend:
     build: .
     env_file:
       - .env
